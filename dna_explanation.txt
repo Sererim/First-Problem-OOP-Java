@@ -7,9 +7,12 @@ Eye color - Green, Skin color - white, Height - Average, Hair color - brown
 
 Eye color - E
 Green - g; Brown - b;Blue - l;Grey - r;Black - c;
+
 Skin color - S
-White - w; Brown - b; Black - b; Yellow - y;
+White - w; Brown - b; Black - l; Yellow - y;
+
 Height - H;
 Dwarf - d; Short - s; Small - m; Average - a; Tall - t; Giant - g;
+
 Hair color - A;
 Ginger - g; Blonde - b; Brown - r; Black - l;
