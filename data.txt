@@ -1,0 +1,3 @@
+Name;Sex;Family Name;Mother;Father;Siblings;DNA;
+Adam;Male;Firstborn;-;-;-;EgSwHaAr;
+Eve;Female;Firstborn;-;-;-;EgSwHaAg;
