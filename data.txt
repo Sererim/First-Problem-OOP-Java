@@ -1,3 +1,6 @@
 Name;Sex;Family Name;Mother;Father;Siblings;Partner;DNA;
 Adam;Male;Firstborn;-;-;-;Eve;EgSwHaAr;
 Eve;Female;Firstborn;-;-;-;Adam;EgSwHaAg;
+Kain;Male;Firstborn;Eve;Adam;Abel,Seth;-;EgSwHaAg;
+Abel;Male;Firstborn;Eve;Adam;Kain,Seth;-;EgSwHaAr;
+Seth;Male;Firstborn;Eve;Adam;Kain,Abel;-;EbSwHaAr;
