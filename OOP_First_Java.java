@@ -14,7 +14,7 @@ import java.util.Random;
 public class OOP_First_Java {
 
     private static Random rand = new Random();
-    private static ArrayList<String> columnList = new ArrayList<String>(Arrays.asList("Name", "Sex", "Family Name", "Mother", "Father", "Siblings", "DNA"));
+    private static ArrayList<String> columnList = new ArrayList<String>(Arrays.asList("Name", "Sex", "Family Name", "Mother", "Father", "Siblings", "Partner", "DNA"));
     private static List<String> eye_color = Arrays.asList("g", "b", "l", "c");
     private static List<String> skin_color = Arrays.asList("w", "b", "l", "y");
     private static List<String> height = Arrays.asList("d", "s", "m", "a", "t", "g");
@@ -74,12 +74,16 @@ public class OOP_First_Java {
 
     private static void store_data(ArrayList<String> dt) 
     {
-        String foo = String.join(";", dt);
-        try (FileWriter fw = new FileWriter("data.txt", true);
+        try (FileWriter fw = new FileWriter("data.txt", false);
         BufferedWriter bw = new BufferedWriter(fw);
         PrintWriter out = new PrintWriter(bw))
         {
-            out.println(foo);
+            for(int i = 0; i < dt.size(); i++)
+            {
+                if(i % 8 == 0 && i != 0)
+                    out.println();
+                out.print(dt.get(i) + ";");
+            }
         }
         catch (Exception e) {
             System.out.println("ERROR ON WRITING TO FILE!");
@@ -98,12 +102,15 @@ public class OOP_First_Java {
         String foo = "";
         int k = 2;
         System.out.println("\nEnter a name to read geneological data.");
+        for(int i = 0; i < All.size(); i += 8)
+            System.out.print(All.get(i) + " ");
+        System.out.print("\n");
         foo = scan.nextLine();
         for(int i = 0; i < All.size(); i += 8)
         {
             if(foo.equals(All.get(i)))
             {
-                for(int j = i + 2; j < (i + 6) && j < All.size(); j++)
+                for(int j = i + 2; j < (i + 7) && j < All.size(); j++)
                 {
                     System.out.println(columnList.get(k) + " : " + All.get(j));
                     k++;
