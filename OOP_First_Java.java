@@ -1,11 +1,9 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.Collections;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,30 +13,26 @@ import java.util.Random;
 
 public class OOP_First_Java {
 
-    private static File file = new File("data.txt");
     private static Random rand = new Random();
-    private static List<String> columnList = Arrays.asList("Name", "Sex", "Family Name", "Mother", "Father", "Siblings", "DNA");
+    private static ArrayList<String> columnList = new ArrayList<String>(Arrays.asList("Name", "Sex", "Family Name", "Mother", "Father", "Siblings", "DNA"));
     private static List<String> eye_color = Arrays.asList("g", "b", "l", "c");
     private static List<String> skin_color = Arrays.asList("w", "b", "l", "y");
     private static List<String> height = Arrays.asList("d", "s", "m", "a", "t", "g");
     private static List<String> hair_color = Arrays.asList("g", "b", "r", "l");
-    private static int mod = 7;
     private static Scanner scan = new Scanner(System.in);
+    private ArrayList<String> All = new ArrayList<>();
 
     private static ArrayList<String> get_data()
     {
         String foo = "";
-        int i = 0;
-        ArrayList<String> bar = new ArrayList<String>();
-        try (FileReader fr = new FileReader(file)) {
-            while((i = fr.read()) != -1)
-                foo += (char)i;
-        } catch (Exception e) {
-            System.out.println("ERROR ON READING DATA");
+        try {
+            foo = new String(Files.readAllBytes(Paths.get("data.txt")));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        foo.replace("\n", "").replace("\r", "").replace("\n\r", "");
-        Collections.addAll(bar, foo.split(";"));
-        bar.remove(24);
+        ArrayList<String> bar = new ArrayList<String>();
+        foo = foo.replace("\n", "").replace("\r", "").replace("\r\n", "").replaceAll("\n\r", "");
+        bar = new ArrayList<String>(Arrays.asList(foo.split(";")));
         return bar;
     }
     
@@ -78,28 +72,10 @@ public class OOP_First_Java {
         return dna;
     }
 
-    private static String get_parent_child_DNA(String mother_DNA, String father_DNA)
-    {
-        String child_dna = "";
-        for(int i = 0; i < mother_DNA.length(); i++)
-        {
-            if(i % 2 == 0)
-                child_dna += mother_DNA.charAt(i);
-            else
-            {
-                if(rand.nextInt(101) > 55)
-                    child_dna += mother_DNA.charAt(i);
-                else
-                    child_dna += father_DNA.charAt(i);
-            }
-        }
-        return child_dna;
-    }
-
     private static void store_data(ArrayList<String> dt) 
     {
         String foo = String.join(";", dt);
-        try (FileWriter fw = new FileWriter(file, true);
+        try (FileWriter fw = new FileWriter("data.txt", true);
         BufferedWriter bw = new BufferedWriter(fw);
         PrintWriter out = new PrintWriter(bw))
         {
@@ -110,46 +86,116 @@ public class OOP_First_Java {
         }
     }
 
-    private static ArrayList<String> get_new_human()
+    private ArrayList<String> get_all_humans(ArrayList<String> dt)
     {
-        String foo = "";
-        ArrayList<String> dt = new ArrayList<String>();
-        while(true)
-        {
-            System.out.println("Enter a new entry to the data.");
-            for(int i = 0; i < mod - 1; i++)
-            {
-                System.out.println("Enter " + columnList.get(i));
-                dt.add(scan.nextLine());
-            }
-            dt.add(get_random_DNA());
-            if(!dt.get(1).equals("Male") || !dt.get(1).equals("Female"))
-                System.out.println("ERROR human can be either male or female!");
-            
-            System.out.println("New entry is:\n" + dt + "\nCorrect Y/N ?");
-            foo = scan.nextLine();
-            if(foo.equals("Y") || foo.equals("y"))
-                break;
-            else
-                dt.clear();
-        }
-        return dt;
+        for(int i = 8; i < dt.size(); i++)
+            All.add(dt.get(i));
+        return All;
     }
 
-    private ArrayList<String> human(ArrayList<String> mother,ArrayList<String> father)
+    private void search()
+    {
+        String foo = "";
+        int k = 2;
+        System.out.println("\nEnter a name to read geneological data.");
+        foo = scan.nextLine();
+        for(int i = 0; i < All.size(); i += 8)
+        {
+            if(foo.equals(All.get(i)))
+            {
+                for(int j = i + 2; j < (i + 6) && j < All.size(); j++)
+                {
+                    System.out.println(columnList.get(k) + " : " + All.get(j));
+                    k++;
+                }
+            }
+        }
+    }
+
+    private ArrayList<String> human()
     {
         ArrayList<String> child = new ArrayList<String>();
-
-
+        String foo = "";
+        System.out.println("Enter Y/y if you want to enter name manually.");
+        if(foo.equals("Y") || foo.equals("y"))
+        {
+            System.out.println("Enter name.");
+            child.add(scan.nextLine());
+            System.out.println("Enter sex of the human.");
+            foo = scan.nextLine();
+            if(foo.equals("Male") || foo.equals("Female"))
+                child.add(foo);
+            else
+            {
+                child.clear();
+                return child;
+            }
+        }
+        else
+        {
+            if(rand.nextInt(11) > 6)
+            {
+                child.add(get_name("Female"));
+                child.add("Female");
+            }
+            else
+            {
+                child.add(get_name("Male"));
+                child.add("Male");
+            }
+        }
+        System.out.println("If you want manually enter names of parents and siblings enter Y/y");
+        if(foo.equals("Y") || foo.equals("y"))
+        {
+            for(int i = 2; i < 6; i++)
+            {
+                System.out.println("Enter " + columnList.get(i));
+                child.add(scan.nextLine());        
+            }
+        }
+        else
+        {
+            child.add("Secondborn");
+            child.add(get_name("Female"));
+            child.add(get_name("Male"));
+            child.add("-");
+        }
+        child.add(get_random_DNA());
+        System.out.println(child);
         return child;
     }
 
     public static void main(String[] args) {
-        ArrayList<String> dt = get_data();
-        String foo, bar = "";
-        foo = dt.get(15);
-        bar = dt.get(23);
-        System.out.println(OOP_First_Java.get_parent_child_DNA(foo, bar));
-        
+        String foo = "";
+        System.out.println("Program is running");
+        OOP_First_Java humFirst = new OOP_First_Java();
+        humFirst.get_all_humans(get_data());
+        while(true)
+        {
+            System.out.println("Enter:\n1. To search in data.\n2. To generate new human.\n3. To read all data.\n4. To terminate the program.");
+            foo = scan.nextLine();
+            switch(foo)
+            {
+                case "1":
+                    humFirst.search();
+                    break;
+                case "2":
+                if(!humFirst.All.addAll(humFirst.human()))
+                    System.out.println("ERROR ON ADDING TO ALL!");
+                    break;
+                case "3":
+                    System.out.println(humFirst.All);
+                    break;
+                case "4":
+                    break;
+            }
+            if(foo.equals("4"))
+                break;
+        }
+        if(!columnList.addAll(humFirst.All))
+            System.out.println("ERROR ON CREATING DATA TO SAVE.");
+        else
+            store_data(columnList);
+        scan.close();
     }
 }
